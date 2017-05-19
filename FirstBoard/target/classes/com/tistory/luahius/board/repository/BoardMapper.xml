@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tistory.luahius.board.repository.BoardMapper">
+
+	<!-- 게시글 입력 -->
+	<insert id="insertBoard" parameterType="com.tistory.luahius.board.domain.BoardVo">
+		INSERT INTO tb_board(
+			board_title,
+			board_content,
+			board_date
+		) VALUES (
+			#{boardTitle},
+			#{boardContent},
+			now()
+		)
+	</insert>
+	
+	<!-- 게시글의 총 수 -->
+	<select id="totalCount" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			tb_board
+	</select>
+	
+	<!-- 게시글 목록 -->
+	<select id="getBoardList" parameterType="Map" resultType="com.tistory.luahius.board.domain.BoardVo">
+		SELECT 
+			board_no as boardNo,
+		    board_title as boardTitle,
+		    board_content as boardContent,
+		    board_date as boardDate
+		FROM
+			tb_board
+		<!-- WHERE
+			board_title = 1 or board_content = 1 -->
+		ORDER BY board_date
+		DESC LIMIT #{beginRow}, #{pagePerRow}
+	</select>
+	
+	<!-- 글 상세보기 -->
+	<select id="getBoardDetail" parameterType="int"  resultType="com.tistory.luahius.board.domain.BoardVo">
+		SELECT 
+			board_no as boardNo,
+		    board_title as boardTitle,
+		    board_content as boardContent,
+		    board_date as boardDate
+		FROM
+			tb_board
+		WHERE
+			board_no = #{boardNo}
+	</select>
+	
+	<!-- 글 수정 -->
+	<update id="updateBoard" parameterType="com.tistory.luahius.board.domain.BoardVo">
+		UPDATE 
+			tb_board
+		SET
+			board_title = #{boardTitle},
+		    board_content = #{boardContent},
+		    board_update_date = now()
+		WHERE
+			board_no = #{boardNo}
+	</update>
+
+	<!-- 글 삭제 -->
+	<delete id ="boardDelete" parameterType="int">
+		DELETE FROM 
+			tb_board 
+		WHERE
+			board_no = #{boardNo}
+	</delete>
+	
+	
+</mapper>
